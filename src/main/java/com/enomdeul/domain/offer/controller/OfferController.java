@@ -1,5 +1,6 @@
 package com.enomdeul.domain.offer.controller;
 
+import com.enomdeul.domain.offer.controller.docs.OfferControllerDocs;
 import com.enomdeul.domain.offer.dto.request.OfferRequest;
 import com.enomdeul.domain.offer.dto.request.OfferStatusReq;
 import com.enomdeul.domain.offer.dto.response.OfferAcceptRes;
@@ -18,11 +19,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/offers")
-public class OfferController {
+public class OfferController implements OfferControllerDocs {
 
     private final OfferService offerService;
 
     // 오퍼 전송
+    @Override
     @PostMapping
     public ApiResponse<OfferResponse> sendOffer(
             @AuthenticationPrincipal String userId,
@@ -34,6 +36,7 @@ public class OfferController {
     }
 
     // 받은 오퍼 조회
+    @Override
     @GetMapping("/received")
     public ApiResponse<List<ReceivedOfferRes>> getReceivedOffers(@AuthenticationPrincipal String userId) {
         Long receiverId = Long.parseLong(userId);
@@ -50,6 +53,7 @@ public class OfferController {
     }
 
     // 받은 매칭 오퍼 수락/거부 API
+    @Override
     @PatchMapping("/users/{senderId}/status")
     public ApiResponse<OfferAcceptRes> updateOfferStatus(
             @AuthenticationPrincipal String userId, // 내 ID (Receiver)

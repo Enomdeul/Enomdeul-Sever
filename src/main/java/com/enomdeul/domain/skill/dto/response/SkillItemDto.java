@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SkillItemDto {
-    private Long skill_id;
-    private String skill_name;
+    private Long skillId;
+    private String skillName;
 
     public static SkillItemDto from(Skill skill) {
         return new SkillItemDto(

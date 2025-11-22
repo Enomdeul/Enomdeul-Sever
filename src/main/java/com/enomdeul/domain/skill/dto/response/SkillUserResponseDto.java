@@ -5,6 +5,6 @@ public record SkillUserResponseDto(
         int age,
         String organization,
         String intro,
-        Long user_id
+        Long userId
 ) {
 }

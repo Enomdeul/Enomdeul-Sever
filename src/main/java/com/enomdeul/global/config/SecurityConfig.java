@@ -31,11 +31,11 @@
                     .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .csrf(AbstractHttpConfigurer::disable)
 
-                    // Form 로그인, Basic Http 비활성화 (REST API이므로)
+                    // Form 로그인, Basic Http 비활성화 
                     .formLogin(AbstractHttpConfigurer::disable)
                     .httpBasic(AbstractHttpConfigurer::disable)
 
-                    // 세션 사용 안 함 (JWT 사용 시 STATELESS 설정 필수)
+                    // 세션 사용 안 함
                     .sessionManagement(session -> session
                             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     )

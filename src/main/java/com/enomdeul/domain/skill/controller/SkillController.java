@@ -1,5 +1,6 @@
 package com.enomdeul.domain.skill.controller;
 
+import com.enomdeul.domain.skill.controller.docs.SkillControllerDocs;
 import com.enomdeul.domain.skill.dto.response.DesiredSkillDto;
 import com.enomdeul.domain.skill.dto.response.JobGroupSkillResponse;
 import com.enomdeul.domain.skill.dto.response.SkillUserResponseDto;
@@ -20,18 +21,19 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/skills")
-public class SkillController {
+public class SkillController implements SkillControllerDocs {
     private final SkillService skillService;
     private final SkillUserService skillUserService;
     private final DesiredSkillService desiredSkillService;
 
+    @Override
     @GetMapping
     public ApiResponse<List<JobGroupSkillResponse>> getAllSkills(
     ){
         return ApiResponse.of(ApiSuccessCode.SUCCESS,skillService.getSkillsByJobGroup());
     }
 
-
+    @Override
     @GetMapping("/{skillId}/users")
     public ApiResponse<List<SkillUserResponseDto>> getUsersBySkillId(
             @PathVariable Long skillId
@@ -40,6 +42,7 @@ public class SkillController {
         return ApiResponse.of(ApiSuccessCode.SUCCESS,users);
     }
 
+    @Override
     @GetMapping("/desired")
     public ApiResponse<List<DesiredSkillDto>> getAddDesiredSkill(
             @AuthenticationPrincipal String userId

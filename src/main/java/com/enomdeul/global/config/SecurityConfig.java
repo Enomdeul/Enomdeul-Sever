@@ -28,19 +28,19 @@
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
-                    // 2. CSRF 해제 (JWT 사용 시 불필요)
+                    .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .csrf(AbstractHttpConfigurer::disable)
 
-                    // 3. Form 로그인, Basic Http 비활성화 (REST API이므로)
+                    // Form 로그인, Basic Http 비활성화 (REST API이므로)
                     .formLogin(AbstractHttpConfigurer::disable)
                     .httpBasic(AbstractHttpConfigurer::disable)
 
-                    // 4. 세션 사용 안 함 (JWT 사용 시 STATELESS 설정 필수)
+                    // 세션 사용 안 함 (JWT 사용 시 STATELESS 설정 필수)
                     .sessionManagement(session -> session
                             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     )
 
-                    // 5. 경로별 인가 설정
+                    // 경로별 인가 설정
                     .authorizeHttpRequests(auth -> auth
                             // Swagger 관련 경로 허용
                             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -62,7 +62,7 @@
         public CorsConfigurationSource corsConfigurationSource() {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowCredentials(true);
-            config.setAllowedOrigins(List.of("http://localhost:3000", "http://43.200.171.31:8080"));
+            config.setAllowedOrigins(List.of("http://localhost:3000", "http://43.200.171.31"));
             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
             config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
             config.setExposedHeaders(List.of("Authorization")); // Authorization 헤더 노출되도록 설정

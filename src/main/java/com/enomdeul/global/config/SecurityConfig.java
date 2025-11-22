@@ -60,25 +60,15 @@
 
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration();
-
-            // 모든 출처 허용 (프론트엔드 포트가 뭐든 상관없게)
-            configuration.setAllowedOriginPatterns(List.of("*"));
-
-            // 모든 HTTP 메서드 허용 (GET, POST, PUT, DELETE, PATCH, OPTIONS)
-            configuration.setAllowedMethods(List.of("*"));
-
-            // 모든 헤더 허용
-            configuration.setAllowedHeaders(List.of("*"));
-
-            // 자격 증명 허용 (쿠키, Authorization 헤더 등)
-            configuration.setAllowCredentials(true);
-
-            // 프론트에서 Authorization 헤더를 읽을 수 있게 노출
-            configuration.setExposedHeaders(List.of("Authorization"));
-
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowCredentials(true);
+            config.setAllowedOrigins(List.of("http://localhost:3000", "http://43.200.171.31:8080"));
+            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+            config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
+            config.setExposedHeaders(List.of("Authorization")); // Authorization 헤더 노출되도록 설정
+            config.setMaxAge(3600L);
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
+            source.registerCorsConfiguration("/**", config);
             return source;
         }
     }

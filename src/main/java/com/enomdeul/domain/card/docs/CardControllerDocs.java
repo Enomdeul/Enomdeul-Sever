@@ -17,7 +17,7 @@ public interface CardControllerDocs {
     @Operation(summary = "유저 카드 생성", description = "유저 카드를 생성합니다.")
     @ApiErrorCodeExamples(
             value = {SkillErrorCode.class, ApiErrorCode.class},
-            include = { "INTERNAL_SERVER_ERROR", "FORBIDDEN_ERROR", "SKILL_NOT_FOUND"})
+            include = { "INTERNAL_SERVER_ERROR", "FORBIDDEN_ERROR", "SKILL_NOT_FOUND", "INTRODUCTION_SIZE_ERROR"})
     ResponseEntity<ApiResponse<String>> createUserCard(@AuthenticationPrincipal String userId, @RequestBody UserCardReq request);
 
 }

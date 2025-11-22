@@ -7,6 +7,8 @@ import lombok.*;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "offer")
 @IdClass(OfferId.class)

@@ -1,11 +1,16 @@
 package com.enomdeul.domain.user.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 public class UserLoginReq {
-    private String id; // 명세서의 "아이디" (실제 DB 컬럼은 loginId)
+
+    @NotBlank(message = "아이디는 필수 입력값입니다.")
+    private String id;
+
+    @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     private String password;
 }

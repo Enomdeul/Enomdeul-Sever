@@ -8,6 +8,7 @@ import com.enomdeul.domain.user.dto.response.UserSignupRes;
 import com.enomdeul.domain.user.service.UserService;
 import com.enomdeul.global.common.response.ApiResponse;
 import com.enomdeul.global.common.response.code.ApiSuccessCode;
+import jakarta.validation.Valid; 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +24,14 @@ public class UserController implements UserControllerDocs {
 
     @Override
     @PostMapping("/signup")
-    public ApiResponse<UserSignupRes> signup(@RequestBody UserSignupReq req) {
+    public ApiResponse<UserSignupRes> signup(@RequestBody @Valid UserSignupReq req) {
         UserSignupRes result = userService.signup(req);
         return ApiResponse.of(ApiSuccessCode.SUCCESS, result);
     }
 
     @Override
     @PostMapping("/login")
-    public ApiResponse<UserLoginRes> login(@RequestBody UserLoginReq req) {
+    public ApiResponse<UserLoginRes> login(@RequestBody @Valid UserLoginReq req) {
         UserLoginRes result = userService.login(req);
         return ApiResponse.of(ApiSuccessCode.SUCCESS, result);
     }

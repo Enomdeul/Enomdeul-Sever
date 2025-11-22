@@ -55,6 +55,7 @@ public class SkillController implements SkillControllerDocs {
         return ApiResponse.of(ApiSuccessCode.SUCCESS,desiredSkills);
     }
 
+    @Override
     @GetMapping("/recommended")
     public ApiResponse<List<DesiredSkillDto>> getRecommendedSkills(
             @AuthenticationPrincipal String userId

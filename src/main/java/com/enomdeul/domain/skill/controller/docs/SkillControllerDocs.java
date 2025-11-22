@@ -53,4 +53,14 @@ public interface SkillControllerDocs {
     ApiResponse<List<DesiredSkillDto>> getAddDesiredSkill(
             @AuthenticationPrincipal String userId
     );
+
+    @Operation(
+            summary = "추천 스킬 조회",
+            description = "로그인한 사용자의 직군(JobGroup)을 기준으로 '아직 보유하지 않은 스킬'을 분석하여 최대 3개까지 추천합니다."
+    )
+    @ApiErrorCodeExamples(
+            value = {SkillErrorCode.class, UserErrorCode.class, ApiErrorCode.class},
+            include = {"USER_NOT_FOUND", "INTERNAL_SERVER_ERROR", "FORBIDDEN_ERROR"}
+    )
+    ApiResponse<List<DesiredSkillDto>> getRecommendedSkills(@AuthenticationPrincipal String userId);
 }

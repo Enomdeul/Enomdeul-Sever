@@ -1,6 +1,8 @@
 package com.enomdeul.domain.offer.controller.docs;
 
 import com.enomdeul.domain.offer.dto.request.OfferRequest;
+import com.enomdeul.domain.offer.dto.request.OfferStatusReq;
+import com.enomdeul.domain.offer.dto.response.OfferAcceptRes;
 import com.enomdeul.domain.offer.dto.response.OfferResponse;
 import com.enomdeul.domain.offer.dto.response.ReceivedOfferRes;
 import com.enomdeul.domain.offer.dto.response.SentOfferRes;
@@ -12,7 +14,9 @@ import com.enomdeul.global.common.response.code.ApiErrorCode;
 import com.enomdeul.global.exception.swagger.ApiErrorCodeExamples;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -38,4 +42,10 @@ public interface OfferControllerDocs {
             include = { "INTERNAL_SERVER_ERROR", "FORBIDDEN_ERROR"})
     public ApiResponse<List<SentOfferRes>> getSentOffers(@AuthenticationPrincipal String userId);
 
+    @Operation(summary = "받은 매칭 오퍼 수락/거부", description = "받은 매칭 오퍼를 수락/거부합니다.")
+    @ApiErrorCodeExamples(
+            value = {ApiErrorCode.class},
+            include = { "INTERNAL_SERVER_ERROR", "FORBIDDEN_ERROR"})
+    ApiResponse<OfferAcceptRes> updateOfferStatus(
+            @AuthenticationPrincipal String userId, @PathVariable Long senderId, @RequestBody @Valid OfferStatusReq req);
 }

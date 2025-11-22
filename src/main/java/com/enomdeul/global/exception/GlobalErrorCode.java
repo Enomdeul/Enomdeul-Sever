@@ -23,8 +23,8 @@ public enum GlobalErrorCode implements BaseErrorCode {
 
     // 5. 오퍼 관련 오류
     OFFER_LIST_EMPTY(HttpStatus.OK, "OFFER_001", "받은 오퍼 목록 없음"),
-    SENT_OFFER_LIST_EMPTY(HttpStatus.OK, "OFFER_002", "보낸 오퍼 목록 없음"); // ★ 새로 추가된 코드
-
+    SENT_OFFER_LIST_EMPTY(HttpStatus.OK, "OFFER_002", "보낸 오퍼 목록 없음"),
+    OFFER_NOT_FOUND(HttpStatus.NOT_FOUND, "OFFER_003", "해당 매칭을 찾을 수 없습니다.");
     private final HttpStatus status;
     private final String code;
     private final String message;

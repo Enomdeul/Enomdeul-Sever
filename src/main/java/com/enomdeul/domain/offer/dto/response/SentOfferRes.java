@@ -1,6 +1,7 @@
 package com.enomdeul.domain.offer.dto.response;
 
 import com.enomdeul.domain.offer.entity.Offer;
+import com.enomdeul.domain.offer.entity.OfferStatus;
 import com.enomdeul.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +12,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SentOfferRes {
 
-    private String name;        // 받는 사람 이름
-    private Integer age;        // 받는 사람 나이
-    private String organization;// 받는 사람 소속
-    private String introduction;// 받는 사람 한줄소개
-    private Long userId;        // 받는 사람 ID (Receiver ID)
+    private String name;
+    private Integer age;
+    private String organization;
+    private String introduction;
+    private Long userId;
+    private OfferStatus status;
 
     public static SentOfferRes from(Offer offer) {
         User receiver = offer.getOfferee();
@@ -25,6 +27,7 @@ public class SentOfferRes {
                 .organization(receiver.getOrganization())
                 .introduction(receiver.getIntro())
                 .userId(receiver.getUserId())
+                .status(offer.getOfferStatus())
                 .build();
     }
 }

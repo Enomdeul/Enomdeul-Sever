@@ -1,10 +1,14 @@
 package com.enomdeul.domain.offer.service;
 
 import com.enomdeul.domain.offer.dto.request.OfferRequest;
+import com.enomdeul.domain.offer.dto.request.OfferStatusReq;
+import com.enomdeul.domain.offer.dto.response.OfferAcceptRes;
 import com.enomdeul.domain.offer.dto.response.OfferResponse;
 import com.enomdeul.domain.offer.dto.response.ReceivedOfferRes;
 import com.enomdeul.domain.offer.dto.response.SentOfferRes;
 import com.enomdeul.domain.offer.entity.Offer;
+import com.enomdeul.domain.offer.entity.OfferId;
+import com.enomdeul.domain.offer.entity.OfferStatus;
 import com.enomdeul.domain.offer.repository.OfferRepository;
 import com.enomdeul.domain.user.entity.User;
 import com.enomdeul.domain.user.repository.UserRepository;
@@ -36,37 +40,43 @@ public class OfferService {
         Offer offer = Offer.builder()
                 .offerer(sender)
                 .offeree(receiver)
-                .offerStatus(true)
+                .offerStatus(OfferStatus.WAITING)
                 .build();
 
         offerRepository.save(offer);
         return OfferResponse.from(offer);
     }
 
-    public List<ReceivedOfferRes> getReceivedOffers(Long receiverId) {
-        List<Offer> offers = offerRepository.findAllReceivedOffers(receiverId);
+    @Transactional
+    public OfferAcceptRes updateOfferStatus(Long receiverId, Long offererId, OfferStatusReq req) {
+        // 1. 복합키로 오퍼 조회 (보낸 사람 offererId, 받는 사람 receiverId)
+        OfferId offerId = new OfferId(offererId, receiverId);
 
-        if (offers.isEmpty()) {
-            throw new GlobalException(GlobalErrorCode.OFFER_LIST_EMPTY);
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.OFFER_NOT_FOUND));
+
+        // 2. 상태 변경 (Dirty Checking)
+        offer.changeStatus(req.getStatus());
+
+        // 3. 수락(ACCEPTED)인 경우에만 상대방 이메일 반환
+        if (req.getStatus() == OfferStatus.ACCEPTED) {
+            return OfferAcceptRes.builder()
+                    .email(offer.getOfferer().getEmail())
+                    .build();
         }
 
-        return offers.stream()
-                .map(ReceivedOfferRes::from)
-                .collect(Collectors.toList());
+        return null;
+    }
+
+    public List<ReceivedOfferRes> getReceivedOffers(Long receiverId) {
+        List<Offer> offers = offerRepository.findAllReceivedOffers(receiverId);
+        if (offers.isEmpty()) throw new GlobalException(GlobalErrorCode.OFFER_LIST_EMPTY);
+        return offers.stream().map(ReceivedOfferRes::from).collect(Collectors.toList());
     }
 
     public List<SentOfferRes> getSentOffers(Long senderId) {
-        // 1. 내가 보낸 오퍼 리스트 조회 (받는 사람 정보 포함)
         List<Offer> offers = offerRepository.findAllSentOffers(senderId);
-
-        // 2. 목록이 0개일 때 에러 처리 (명세서: 보낸 오퍼 목록 없음)
-        if (offers.isEmpty()) {
-            throw new GlobalException(GlobalErrorCode.SENT_OFFER_LIST_EMPTY);
-        }
-
-        // 3. DTO 변환
-        return offers.stream()
-                .map(SentOfferRes::from)
-                .collect(Collectors.toList());
+        if (offers.isEmpty()) throw new GlobalException(GlobalErrorCode.SENT_OFFER_LIST_EMPTY);
+        return offers.stream().map(SentOfferRes::from).collect(Collectors.toList());
     }
 }

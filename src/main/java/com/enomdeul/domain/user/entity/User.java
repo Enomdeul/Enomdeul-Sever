@@ -42,7 +42,4 @@ public class User extends BaseTimeEntity {
 
     @Column(length = 255)
     private String intro;
-
-    @Column(name = "portfolio_url", length = 255)
-    private String portfolioUrl;
 }

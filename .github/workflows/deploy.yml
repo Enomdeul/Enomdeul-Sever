@@ -30,7 +30,6 @@ jobs:
         with:
           context: .
           push: true
-          # ★ 여기가 바뀌었습니다! (hackathon-server -> enomdle-server)
           tags: ${{ secrets.DOCKER_USERNAME }}/enomdle-server:latest
 
       # 4. EC2 접속 및 배포
@@ -44,11 +43,12 @@ jobs:
             sudo docker stop my-server || true
             sudo docker rm my-server || true
             
-            # ★ 이미지 다운로드 이름 변경!
+            # 이미지 다운로드
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/enomdle-server:latest
             
-            # ★ 실행 명령어도 이름 변경!
+            # -v 옵션으로 서버에 있는 파일을 컨테이너 안쪽 /config/ 폴더로 연결합니다.
             sudo docker run -d --name my-server -p 8080:8080 \
+              -v /home/ubuntu/application.yml:/config/application.yml \
               -e DB_URL=${{ secrets.DB_URL }} \
               -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \

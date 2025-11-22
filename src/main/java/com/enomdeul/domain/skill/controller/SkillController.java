@@ -5,6 +5,7 @@ import com.enomdeul.domain.skill.dto.response.DesiredSkillDto;
 import com.enomdeul.domain.skill.dto.response.JobGroupSkillResponse;
 import com.enomdeul.domain.skill.dto.response.SkillUserResponseDto;
 import com.enomdeul.domain.skill.service.DesiredSkillService;
+import com.enomdeul.domain.skill.service.RecommendSkillService;
 import com.enomdeul.domain.skill.service.SkillService;
 import com.enomdeul.domain.skill.service.SkillUserService;
 import com.enomdeul.global.common.response.ApiResponse;
@@ -25,6 +26,7 @@ public class SkillController implements SkillControllerDocs {
     private final SkillService skillService;
     private final SkillUserService skillUserService;
     private final DesiredSkillService desiredSkillService;
+    private final RecommendSkillService recommendSkillService;
 
     @Override
     @GetMapping
@@ -51,5 +53,16 @@ public class SkillController implements SkillControllerDocs {
         List<DesiredSkillDto> desiredSkills = desiredSkillService.getDesiredSkills(id);
 
         return ApiResponse.of(ApiSuccessCode.SUCCESS,desiredSkills);
+    }
+
+    @GetMapping("/recommended")
+    public ApiResponse<List<DesiredSkillDto>> getRecommendedSkills(
+            @AuthenticationPrincipal String userId
+    ){
+        Long id=Long.parseLong(userId);
+        List<DesiredSkillDto> recommended = recommendSkillService.recommendSkills(id);
+
+        return ApiResponse.of(ApiSuccessCode.SUCCESS,recommended);
+
     }
 }

@@ -45,13 +45,10 @@ public class SwaggerConfig {
                 .components(new Components().addSecuritySchemes("JWT TOKEN", securityScheme))
                 .addSecurityItem(securityRequirement)
                 .info(new Info()
-                        .title("Sample API")
+                        .title("AS API")
                         .version("1.0")
-                        .description("샘플 API 명세서입니다."))
-                .servers(List.of(
-                        // TODO: 환경에 맞게 수정 필요
-                        new Server().url("http://").description("Development server")
-                ));
+                        .description("AS의 API 명세서입니다."))
+                .addServersItem(new Server().url("/"));
     }
 
     // 커스텀 어노테이션 정보 가져오기

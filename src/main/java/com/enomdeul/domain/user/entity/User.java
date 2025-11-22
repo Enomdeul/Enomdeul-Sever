@@ -7,6 +7,8 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(name = "`user`") // DB 예약어라 백틱 필수
 public class User extends BaseTimeEntity {
 
@@ -21,7 +23,7 @@ public class User extends BaseTimeEntity {
     @Column(length = 5)
     private String gender;
 
-    @Column(length = 30)
+    @Column(length = 100)
     private String password;
 
     @Column(name = "login_id", length = 30)

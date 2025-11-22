@@ -1,8 +1,6 @@
 package com.enomdeul.domain.card.dto.response;
 
 import com.enomdeul.domain.skill.enums.JobGroup;
-import com.enomdeul.domain.user.enums.Gender;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

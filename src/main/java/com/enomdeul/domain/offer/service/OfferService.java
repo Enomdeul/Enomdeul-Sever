@@ -1,12 +1,16 @@
 package com.enomdeul.domain.offer.service;
 
 import com.enomdeul.domain.offer.dto.request.OfferRequest;
+import com.enomdeul.domain.offer.dto.request.OfferStatusReq;
+import com.enomdeul.domain.offer.dto.response.OfferAcceptRes;
 import com.enomdeul.domain.offer.dto.response.OfferResponse;
 import com.enomdeul.domain.offer.dto.response.ReceivedOfferRes;
 import com.enomdeul.domain.offer.dto.response.SentOfferRes;
 import com.enomdeul.domain.offer.entity.Offer;
 import com.enomdeul.domain.offer.entity.OfferId;
 import com.enomdeul.domain.offer.entity.OfferStatus;
+import com.enomdeul.domain.offer.exception.OfferErrorCode;
+import com.enomdeul.domain.offer.exception.OfferException;
 import com.enomdeul.domain.offer.repository.OfferRepository;
 import com.enomdeul.domain.user.entity.User;
 import com.enomdeul.domain.user.exception.UserErrorCode;
@@ -51,7 +55,7 @@ public class OfferService {
         OfferId offerId = new OfferId(offererId, receiverId);
 
         Offer offer = offerRepository.findById(offerId)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.OFFER_NOT_FOUND));
+                .orElseThrow(() -> new OfferException(OfferErrorCode.OFFER_NOT_FOUND));
 
         // 2. 상태 변경 (Dirty Checking)
         offer.changeStatus(req.getStatus());

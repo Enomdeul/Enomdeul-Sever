@@ -17,6 +17,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>(code.getCode(), code.getMessage(), result);
     }
 
+    public static <T> ApiResponse<T> onSuccess(T result) {
+        return new ApiResponse<>("SUCCESS", "요청에 성공했습니다.", result);
+    }
+
     public static <T> ApiResponse<T> of(ApiSuccessCode code) {
         return new ApiResponse<>(code.getCode(), code.getMessage(), null);
     }

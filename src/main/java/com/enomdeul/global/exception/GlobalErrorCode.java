@@ -1,0 +1,24 @@
+package com.enomdeul.global.exception;
+
+import com.enomdeul.global.common.response.code.BaseErrorCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
+@AllArgsConstructor
+public enum GlobalErrorCode implements BaseErrorCode {
+    // 1. 서버 내부 오류 (500)
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "GLOBAL_001", "서버 내부 오류가 발생했습니다."),
+
+    // 2. 토큰 관련 오류
+    TOKEN_INVALID_ERROR(HttpStatus.UNAUTHORIZED, "AUTH_001", "유효하지 않는 토큰입니다."),
+    TOKEN_EXPIRED_ERROR(HttpStatus.UNAUTHORIZED, "AUTH_002", "만료된 토큰입니다."),
+
+    // 3. 기타 공통 오류 (필요 시 추가)
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "GLOBAL_003", "지원하지 않는 HTTP 메서드입니다.");
+
+    private final HttpStatus status;
+    private final String code;
+    private final String message;
+}

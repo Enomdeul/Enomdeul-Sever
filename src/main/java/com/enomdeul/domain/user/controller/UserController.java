@@ -1,6 +1,6 @@
 package com.enomdeul.domain.user.controller;
 
-import com.enomdeul.domain.user.controller.docs.UserControllerDocs; // ★ Docs 임포트
+import com.enomdeul.domain.user.controller.docs.UserControllerDocs;
 import com.enomdeul.domain.user.dto.request.UserLoginReq;
 import com.enomdeul.domain.user.dto.request.UserSignupReq;
 import com.enomdeul.domain.user.dto.response.UserLoginRes;

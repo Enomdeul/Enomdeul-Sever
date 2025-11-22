@@ -9,6 +9,8 @@ import com.enomdeul.domain.offer.dto.response.SentOfferRes;
 import com.enomdeul.domain.offer.entity.Offer;
 import com.enomdeul.domain.offer.entity.OfferId;
 import com.enomdeul.domain.offer.entity.OfferStatus;
+import com.enomdeul.domain.offer.exception.OfferErrorCode;
+import com.enomdeul.domain.offer.exception.OfferException;
 import com.enomdeul.domain.offer.repository.OfferRepository;
 import com.enomdeul.domain.user.entity.User;
 import com.enomdeul.domain.user.exception.UserErrorCode;
@@ -108,11 +110,6 @@ public class OfferService {
         // 3-2. 목록 조회
         List<Offer> offers = offerRepository.findAllReceivedOffers(receiverId);
 
-        // 3-3. 목록 없음 예외 처리
-        if (offers.isEmpty()) {
-            throw new GlobalException(GlobalErrorCode.OFFER_LIST_EMPTY);
-        }
-
         return offers.stream()
                 .map(ReceivedOfferRes::from)
                 .collect(Collectors.toList());
@@ -129,11 +126,6 @@ public class OfferService {
 
         // 4-2. 목록 조회
         List<Offer> offers = offerRepository.findAllSentOffers(senderId);
-
-        // 4-3. 목록 없음 예외 처리
-        if (offers.isEmpty()) {
-            throw new GlobalException(GlobalErrorCode.SENT_OFFER_LIST_EMPTY);
-        }
 
         return offers.stream()
                 .map(SentOfferRes::from)

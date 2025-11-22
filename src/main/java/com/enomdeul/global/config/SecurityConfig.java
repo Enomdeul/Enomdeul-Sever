@@ -9,7 +9,6 @@
     import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.security.web.SecurityFilterChain;
-    import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
     import org.springframework.web.cors.CorsConfiguration;
     import org.springframework.web.cors.CorsConfigurationSource;
     import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -19,12 +18,6 @@
     @Configuration
     @EnableWebSecurity
     public class SecurityConfig {
-
-        private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-        public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-            this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        }
 
         // 비밀번호 암호화 빈 등록
         @Bean
@@ -38,15 +31,14 @@
                     .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .csrf(AbstractHttpConfigurer::disable)
 
-                    // Form 로그인, Basic Http 비활성화 (REST API이므로)
+                    // Form 로그인, Basic Http 비활성화 
                     .formLogin(AbstractHttpConfigurer::disable)
                     .httpBasic(AbstractHttpConfigurer::disable)
 
-                    // 세션 사용 안 함 (JWT 사용 시 STATELESS 설정 필수)
+                    // 세션 사용 안 함
                     .sessionManagement(session -> session
                             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     )
-                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                     // 경로별 인가 설정
                     .authorizeHttpRequests(auth -> auth

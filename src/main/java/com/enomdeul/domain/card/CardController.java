@@ -1,7 +1,8 @@
 package com.enomdeul.domain.card;
 
 import com.enomdeul.domain.card.docs.CardControllerDocs;
-import com.enomdeul.domain.card.dto.UserCardReq;
+import com.enomdeul.domain.card.dto.request.UserCardReq;
+import com.enomdeul.domain.card.dto.response.UserCardRes;
 import com.enomdeul.domain.card.service.CardService;
 import com.enomdeul.global.common.response.ApiResponse;
 import com.enomdeul.global.common.response.code.ApiSuccessCode;
@@ -9,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/cards")
@@ -28,5 +26,22 @@ public class CardController implements CardControllerDocs {
         cardService.createUserCard(userId, request);
 
         return ResponseEntity.ok(ApiResponse.of(ApiSuccessCode.SUCCESS));
+    }
+
+    @Override
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserCardRes>> findUserCard(@AuthenticationPrincipal String id) {
+        Long userId = Long.parseLong(id);
+        UserCardRes response = cardService.findUserCard(userId);
+
+        return ResponseEntity.ok(ApiResponse.of(ApiSuccessCode.SUCCESS, response));
+    }
+
+    @Override
+    @GetMapping("/{userId}")
+    public ResponseEntity<ApiResponse<UserCardRes>> findUserCard(@PathVariable Long userId) {
+        UserCardRes response = cardService.findUserCard(userId);
+
+        return ResponseEntity.ok(ApiResponse.of(ApiSuccessCode.SUCCESS, response));
     }
 }

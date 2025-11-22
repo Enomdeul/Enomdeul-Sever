@@ -1,4 +1,4 @@
-package com.enomdeul.domain.card.dto;
+package com.enomdeul.domain.card.dto.request;
 
 import com.enomdeul.domain.skill.enums.JobGroup;
 import com.enomdeul.domain.user.enums.Gender;
@@ -19,7 +19,6 @@ public class UserCardReq {
     private JobGroup jobGroup;
     @Size(max = 75, message = "한줄 소개는 75자 이하여야 합니다.")
     private String introduction;
-    private String portfolioUrl;
 
     // 보유 스킬 리스트
     private List<SkillRequest> skills;

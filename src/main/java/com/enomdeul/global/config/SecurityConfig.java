@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/js/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/api/v1/auth/**", "/api/v1/samples", "/api/v1/skills").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/api/v1/samples", "/api/v1/skills/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

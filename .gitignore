@@ -39,3 +39,5 @@ out/
 # Ignore all YAML files
 *.yml
 *.yaml
+
+!.github/workflows/*.yml

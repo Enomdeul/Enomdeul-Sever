@@ -9,6 +9,7 @@
     import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.security.web.SecurityFilterChain;
+    import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
     import org.springframework.web.cors.CorsConfiguration;
     import org.springframework.web.cors.CorsConfigurationSource;
     import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -19,7 +20,13 @@
     @EnableWebSecurity
     public class SecurityConfig {
 
-        // 1. 비밀번호 암호화 빈 등록
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+        public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+            this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        }
+
+        // 비밀번호 암호화 빈 등록
         @Bean
         public PasswordEncoder passwordEncoder() {
             return new BCryptPasswordEncoder();
@@ -39,6 +46,7 @@
                     .sessionManagement(session -> session
                             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     )
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                     // 경로별 인가 설정
                     .authorizeHttpRequests(auth -> auth
@@ -62,7 +70,7 @@
         public CorsConfigurationSource corsConfigurationSource() {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowCredentials(true);
-            config.setAllowedOrigins(List.of("http://localhost:3000", "http://43.200.171.31"));
+            config.setAllowedOrigins(List.of("http://localhost:5174", "http://localhost:5173", "http://43.200.171.31:8080"));
             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
             config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
             config.setExposedHeaders(List.of("Authorization")); // Authorization 헤더 노출되도록 설정

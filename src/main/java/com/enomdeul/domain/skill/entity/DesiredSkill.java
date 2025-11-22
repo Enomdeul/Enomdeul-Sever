@@ -7,6 +7,8 @@ import lombok.*;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "desired_skill")
 @IdClass(DesiredSkillId.class)

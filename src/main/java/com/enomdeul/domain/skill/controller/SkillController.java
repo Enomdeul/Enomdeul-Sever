@@ -1,12 +1,15 @@
 package com.enomdeul.domain.skill.controller;
 
+import com.enomdeul.domain.skill.dto.response.DesiredSkillDto;
 import com.enomdeul.domain.skill.dto.response.JobGroupSkillResponse;
 import com.enomdeul.domain.skill.dto.response.SkillUserResponseDto;
+import com.enomdeul.domain.skill.service.DesiredSkillService;
 import com.enomdeul.domain.skill.service.SkillService;
 import com.enomdeul.domain.skill.service.SkillUserService;
 import com.enomdeul.global.common.response.ApiResponse;
 import com.enomdeul.global.common.response.code.ApiSuccessCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,7 @@ import java.util.List;
 public class SkillController {
     private final SkillService skillService;
     private final SkillUserService skillUserService;
+    private final DesiredSkillService desiredSkillService;
 
     @GetMapping
     public ApiResponse<List<JobGroupSkillResponse>> getAllSkills(
@@ -34,5 +38,15 @@ public class SkillController {
     ){
         List<SkillUserResponseDto>users=skillUserService.getUserBySkillId(skillId);
         return ApiResponse.of(ApiSuccessCode.SUCCESS,users);
+    }
+
+    @GetMapping("/desired")
+    public ApiResponse<List<DesiredSkillDto>> getAddDesiredSkill(
+            @AuthenticationPrincipal String userId
+    ){
+        Long id=Long.parseLong(userId);
+        List<DesiredSkillDto> desiredSkills = desiredSkillService.getDesiredSkills(id);
+
+        return ApiResponse.of(ApiSuccessCode.SUCCESS,desiredSkills);
     }
 }

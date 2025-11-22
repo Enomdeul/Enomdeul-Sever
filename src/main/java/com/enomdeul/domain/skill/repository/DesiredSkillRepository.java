@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface DesiredSkillRepository extends JpaRepository<DesiredSkill, Long> {
     List<DesiredSkill> findAllByUser(User user);
+    List<DesiredSkill> findAllByUser_UserId(Long userId);
 }

@@ -21,7 +21,4 @@ public class UserSkill extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id")
     private Skill skill;
-
-    @Column(length = 30)
-    private String level;
 }

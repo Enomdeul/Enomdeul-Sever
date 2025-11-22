@@ -1,6 +1,8 @@
 package com.enomdeul.domain.user.controller;
 
+import com.enomdeul.domain.user.dto.request.UserLoginReq;
 import com.enomdeul.domain.user.dto.request.UserSignupReq;
+import com.enomdeul.domain.user.dto.response.UserLoginRes;
 import com.enomdeul.domain.user.dto.response.UserSignupRes;
 import com.enomdeul.domain.user.service.UserService;
 import com.enomdeul.global.common.response.ApiResponse;
@@ -21,6 +23,12 @@ public class UserController {
     @PostMapping("/v1/auth/signup")
     public ApiResponse<UserSignupRes> signup(@RequestBody UserSignupReq req) {
         UserSignupRes result = userService.signup(req);
+        return ApiResponse.of(ApiSuccessCode.SUCCESS, result);
+    }
+
+    @PostMapping("/v1/auth/login")
+    public ApiResponse<UserLoginRes> login(@RequestBody UserLoginReq req) {
+        UserLoginRes result = userService.login(req);
         return ApiResponse.of(ApiSuccessCode.SUCCESS, result);
     }
 }

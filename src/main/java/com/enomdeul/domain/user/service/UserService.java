@@ -2,6 +2,9 @@ package com.enomdeul.domain.user.service;
 
 import com.enomdeul.domain.user.dto.request.UserSignupReq;
 import com.enomdeul.domain.user.dto.response.UserSignupRes;
+import com.enomdeul.domain.user.dto.request.UserLoginReq;
+import com.enomdeul.domain.user.dto.response.UserLoginRes;
+import com.enomdeul.global.config.JwtTokenProvider;
 import com.enomdeul.domain.user.entity.User;
 import com.enomdeul.domain.user.exception.UserErrorCode;
 import com.enomdeul.domain.user.exception.UserException;
@@ -18,6 +21,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    // ★ 아래 줄을 추가해야 합니다!
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public UserSignupRes signup(UserSignupReq req) {
@@ -44,5 +49,27 @@ public class UserService {
         // 4. 저장 및 반환
         User savedUser = userRepository.save(newUser);
         return UserSignupRes.from(savedUser);
+    }
+
+    // 로그인
+    public UserLoginRes login(UserLoginReq req) {
+        // 1. 아이디로 유저 찾기
+        User user = userRepository.findByLoginId(req.getId())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 아이디입니다."));
+
+        // 2. 비밀번호 확인 (입력된 비번 vs DB에 저장된 비번 비교)
+        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // 3. 토큰 생성 (Access + Refresh)
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
+
+        // 4. 결과 반환
+        return UserLoginRes.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }

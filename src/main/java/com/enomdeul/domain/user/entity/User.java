@@ -1,5 +1,7 @@
 package com.enomdeul.domain.user.entity;
 
+import com.enomdeul.domain.skill.enums.JobGroup;
+import com.enomdeul.domain.user.enums.Gender;
 import com.enomdeul.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,8 +22,9 @@ public class User extends BaseTimeEntity {
     @Column(length = 20)
     private String name;
 
-    @Column(length = 5)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private Gender gender;
 
     @Column(length = 100)
     private String password;
@@ -37,9 +40,22 @@ public class User extends BaseTimeEntity {
 
     private Integer age;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "job_group", length = 30)
-    private String jobGroup;
+    private JobGroup jobGroup;
 
     @Column(length = 255)
     private String intro;
+
+    // 유저 카드 업데이트
+    public void updateCardInfo(String name, Gender gender, Integer age, String organization, JobGroup jobGroup, String intro) {
+
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.organization = organization;
+        this.jobGroup = jobGroup;
+        this.intro = intro;
+    }
+
 }

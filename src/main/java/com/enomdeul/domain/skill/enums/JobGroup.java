@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum JobGroup {
 
-    PM("기획"), DESIGNER("디자인"), DEVELOPER("개발");
+    PLAN("기획"), DESIGNER("디자인"), DEVELOPER("개발");
 
     private final String description;
 }

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SkillRepository extends JpaRepository<Skill, Long> {
     List<Skill> findByJobGroup(String jobGroup);
+    Skill findBySkillId(Long skillId);
 }

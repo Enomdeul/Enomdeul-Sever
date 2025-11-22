@@ -1,6 +1,7 @@
 package com.enomdeul.domain.card.service;
 
-import com.enomdeul.domain.card.dto.UserCardReq;
+import com.enomdeul.domain.card.dto.request.UserCardReq;
+import com.enomdeul.domain.card.dto.response.UserCardRes;
 import com.enomdeul.domain.skill.entity.DesiredSkill;
 import com.enomdeul.domain.skill.entity.Skill;
 import com.enomdeul.domain.skill.entity.UserSkill;
@@ -71,6 +72,40 @@ public class CardService {
                 .toList();
 
         desiredSkillRepository.saveAll(desiredSkills);
+    }
+
+    @Transactional(readOnly = true)
+    public UserCardRes findUserCard(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+
+        // 보유 스킬 조회
+        List<UserSkill> userSkills = userSkillRepository.findAllByUser(user);
+        List<UserCardRes.SkillRequest> skillDtos = userSkills.stream()
+                .map(us -> new UserCardRes.SkillRequest(
+                        us.getSkill().getSkillId(),
+                        us.getSkill().getSkillName()
+                ))
+                .toList();
+
+        // 더하기 스킬 조회
+        List<DesiredSkill> desiredSkills = desiredSkillRepository.findAllByUser(user);
+        List<UserCardRes.SkillRequest> desiredSkillDtos = desiredSkills.stream()
+                .map(ds -> new UserCardRes.SkillRequest(
+                        ds.getSkill().getSkillId(),
+                        ds.getSkill().getSkillName()
+                ))
+                .toList();
+
+        return new UserCardRes(
+                user.getName(),
+                user.getAge(),
+                user.getOrganization(),
+                user.getJobGroup(),
+                user.getIntro(),
+                skillDtos,
+                desiredSkillDtos
+        );
     }
 }
 

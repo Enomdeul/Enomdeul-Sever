@@ -1,8 +1,6 @@
 package com.enomdeul.domain.offer.service;
 
 import com.enomdeul.domain.offer.dto.request.OfferRequest;
-import com.enomdeul.domain.offer.dto.request.OfferStatusReq;
-import com.enomdeul.domain.offer.dto.response.OfferAcceptRes;
 import com.enomdeul.domain.offer.dto.response.OfferResponse;
 import com.enomdeul.domain.offer.dto.response.ReceivedOfferRes;
 import com.enomdeul.domain.offer.dto.response.SentOfferRes;
@@ -11,9 +9,9 @@ import com.enomdeul.domain.offer.entity.OfferId;
 import com.enomdeul.domain.offer.entity.OfferStatus;
 import com.enomdeul.domain.offer.repository.OfferRepository;
 import com.enomdeul.domain.user.entity.User;
+import com.enomdeul.domain.user.exception.UserErrorCode;
+import com.enomdeul.domain.user.exception.UserException;
 import com.enomdeul.domain.user.repository.UserRepository;
-import com.enomdeul.global.exception.GlobalErrorCode;
-import com.enomdeul.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +30,10 @@ public class OfferService {
     @Transactional
     public OfferResponse sendOffer(Long senderId, OfferRequest request) {
         User sender = userRepository.findById(senderId)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.MEMBER_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
 
         User receiver = userRepository.findById(request.getOffereeId())
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.MEMBER_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
 
         Offer offer = Offer.builder()
                 .offerer(sender)
@@ -70,13 +68,14 @@ public class OfferService {
 
     public List<ReceivedOfferRes> getReceivedOffers(Long receiverId) {
         List<Offer> offers = offerRepository.findAllReceivedOffers(receiverId);
-        if (offers.isEmpty()) throw new GlobalException(GlobalErrorCode.OFFER_LIST_EMPTY);
-        return offers.stream().map(ReceivedOfferRes::from).collect(Collectors.toList());
+
+        return offers.stream()
+                .map(ReceivedOfferRes::from)
+                .collect(Collectors.toList());
     }
 
     public List<SentOfferRes> getSentOffers(Long senderId) {
         List<Offer> offers = offerRepository.findAllSentOffers(senderId);
-        if (offers.isEmpty()) throw new GlobalException(GlobalErrorCode.SENT_OFFER_LIST_EMPTY);
         return offers.stream().map(SentOfferRes::from).collect(Collectors.toList());
     }
 }

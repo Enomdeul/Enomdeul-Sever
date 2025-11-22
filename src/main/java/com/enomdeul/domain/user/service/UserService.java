@@ -1,14 +1,12 @@
 package com.enomdeul.domain.user.service;
 
-import com.enomdeul.domain.user.dto.request.UserSignupReq;
-import com.enomdeul.domain.user.dto.response.UserSignupRes;
 import com.enomdeul.domain.user.dto.request.UserLoginReq;
+import com.enomdeul.domain.user.dto.request.UserSignupReq;
 import com.enomdeul.domain.user.dto.response.UserLoginRes;
-import com.enomdeul.global.config.JwtTokenProvider;
+import com.enomdeul.domain.user.dto.response.UserSignupRes;
 import com.enomdeul.domain.user.entity.User;
-import com.enomdeul.domain.user.exception.UserErrorCode;
-import com.enomdeul.domain.user.exception.UserException;
 import com.enomdeul.domain.user.repository.UserRepository;
+import com.enomdeul.global.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,13 +24,6 @@ public class UserService {
 
     @Transactional
     public UserSignupRes signup(UserSignupReq req) {
-        // 1. 중복 체크 (걸리면 커스텀 예외인 UserException 발생)
-        if (userRepository.existsByLoginId(req.getLoginId())) {
-            throw new UserException(UserErrorCode.DUPLICATE_LOGIN_ID);
-        }
-        if (userRepository.existsByEmail(req.getEmail())) {
-            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
-        }
 
         // 2. 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(req.getPassword());
